@@ -1,0 +1,13 @@
+C++:
+
+#include <iostream>
+#include <string>
+
+void sayHello(std::string name) {
+    std::cout << "Hello, my name is " << name << std::endl;
+}
+
+int main() {
+    sayHello("John");
+    return 0;
+}
