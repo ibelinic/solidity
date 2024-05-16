@@ -1,0 +1,18 @@
+// SPDX-License-Identifier: GPL-3.0
+pragma solidity >=0.6.0 <0.9.0;
+
+contract GasContract {
+    uint256 public gasStart;
+    uint256 public gasEnd;
+
+    function expensiveOperation() external {
+        gasStart = gasleft(); // Postavljanje gasStart na početni gas
+        
+        // Simulacija skupe operacije
+        for (uint256 i = 0; i < 10000; i++) {
+            // Simulacija skupe operacije
+        }
+
+        gasEnd = gasleft(); // Postavljanje gasEnd na preostali gas nakon izvođenja operacija
+    }
+}

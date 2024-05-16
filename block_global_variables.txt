@@ -1,0 +1,35 @@
+// SPDX-License-Identifier: GPL-3.0
+pragma solidity >=0.6.0 <0.9.0;
+
+contract BlockGlobalVariables {
+// Funkcija za dobivanje broja bloka
+function getBlockNumber() public view returns (uint) {
+return block.number;
+}
+
+// Funkcija za dobivanje vremena trenutnog bloka
+function getBlockTimestamp() public view returns (uint) {
+return block.timestamp;
+}
+
+// Funkcija za dobivanje težine trenutnog bloka
+function getBlockDifficulty() public view returns (uint) {
+return block.difficulty;
+}
+
+// Funkcija za dobivanje adrese rudara za trenutni blok
+function getBlockCoinbase() public view returns (address) {
+return block.coinbase;
+}
+
+// Funkcija za dobivanje limita gasa trenutnog bloka
+function getBlockGasLimit() public view returns (uint) {
+return block.gaslimit;
+}
+
+// Funkcija za dobivanje hash vrijednosti posljednjeg bloka
+function getLastBlockhash() public view returns (bytes32) {
+uint lastBlockNumber = getBlockNumber() - 1; // Broj prethodnog bloka
+return blockhash(lastBlockNumber);
+}
+}

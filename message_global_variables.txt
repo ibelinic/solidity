@@ -1,0 +1,69 @@
+// SPDX-License-Identifier: GPL-3.0
+pragma solidity >=0.6.0 <0.9.0;
+
+contract DonationSystem {
+    struct Donation {
+        address donor;
+        address recipient;
+        string message;
+        uint256 amount;
+        bool isAnonymous;
+        uint256 transactionCost;
+    }
+
+    Donation[] private donations;
+    uint256 public totalAnonymousDonations;
+    uint256 public totalPublicDonations;
+    
+    bytes public lastDonateMsgData;
+    bytes4 public lastDonateMsgSig;
+
+    function donate(address _recipient, string memory _message, uint256 _amount, bool _isAnonymous) external payable {
+        uint256 transactionCost = msg.value - _amount;
+        require(_amount > 0, "Donation amount must be greater than 0");
+
+        if (_isAnonymous) {
+            require(bytes(_message).length == 0, "Anonymous donations cannot have a message");
+        }
+        
+        
+        Donation memory newDonation = Donation({
+            donor: _isAnonymous ? address(0) : msg.sender,
+            recipient: _recipient,
+            message: _message,
+            amount: _amount,
+            isAnonymous: _isAnonymous,
+            transactionCost: transactionCost
+        });
+        
+        donations.push(newDonation);
+
+        if (_isAnonymous) {
+            totalAnonymousDonations += _amount;
+        } else {
+            totalPublicDonations += _amount;
+        }
+
+        lastDonateMsgData = msg.data;
+        lastDonateMsgSig = msg.sig;
+    }
+
+    function getTotalDonations() external view returns (uint256) {
+        uint256 totalDonations = 0;
+        for (uint256 i = 0; i < donations.length; i++) {
+            totalDonations += donations[i].amount;
+        }
+        return totalDonations;
+    }
+
+    function getDonation(uint256 _index) external view returns (address donor, address recipient, string memory message, uint256 amount, bool isAnonymous, uint256 transactionCost) {
+    // Provjera uvjeta na polju donations
+    if (_index < donations.length) {
+        Donation memory donation = donations[_index];
+        return (donation.donor, donation.recipient, donation.message, donation.amount, donation.isAnonymous, donation.transactionCost);
+    } else {
+        return (address(0), address(0), "There is no donation at this index!", 0, false, 0);
+    }
+    }
+}
+

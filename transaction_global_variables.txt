@@ -1,0 +1,33 @@
+// SPDX-License-Identifier: GPL-3.0
+pragma solidity >=0.6.0 <0.9.0;
+
+contract CarMarket {
+    address public owner;
+    uint public carPrice;
+    address[] public allOwners;
+
+    constructor(uint _carPriceInEther) {
+        owner = msg.sender;
+        carPrice = _carPriceInEther;
+        allOwners.push(owner);
+    }
+
+    function buyCar() external payable returns (string memory) {
+        require(msg.value == carPrice * 1 ether, "Incorrect amount sent");
+        
+        require(tx.gasprice <= 100 gwei, "Gas price too high");
+        require(tx.origin != owner, "Owner cannot buy own car");
+        
+        address payable seller = payable(owner);
+        seller.transfer(msg.value);
+        owner = msg.sender;
+
+        allOwners.push(owner);
+
+        return "The car was successfully purchased.";
+    }
+
+    function getGasPrice() external view returns (uint) {
+        return tx.gasprice;
+    }
+}
